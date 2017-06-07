@@ -99,7 +99,7 @@ class Pagoefectivo extends PaymentModule
             return false;
         }
 
-        //Configuration::updateValue('PAGOEFECTIVO_LIVE_MODE', false);
+        Configuration::updateValue('PAGOEFECTIVO_LIVE_MODE', false);
 
     }
 
@@ -124,7 +124,7 @@ class Pagoefectivo extends PaymentModule
 
     public function uninstall()
     {
-        //Configuration::deleteByName('PAGOEFECTIVO_LIVE_MODE');
+        Configuration::deleteByName('PAGOEFECTIVO_LIVE_MODE');
 
         // Uninstall default
         if (!parent::uninstall()
@@ -242,7 +242,7 @@ class Pagoefectivo extends PaymentModule
     protected function getConfigFormValues()
     {
         return array(
-            //'PAGOEFECTIVO_LIVE_MODE' => Configuration::get('PAGOEFECTIVO_LIVE_MODE', true),
+            'PAGOEFECTIVO_LIVE_MODE' => Configuration::get('PAGOEFECTIVO_LIVE_MODE', true),
             'PAGOEFECTIVO_ACCOUNT_EMAIL' => Configuration::get('PAGOEFECTIVO_ACCOUNT_EMAIL', 'contact@prestashop.com'),
             'PAGOEFECTIVO_ACCOUNT_PASSWORD' => Configuration::get('PAGOEFECTIVO_ACCOUNT_PASSWORD', null),
         );
@@ -423,16 +423,13 @@ class Pagoefectivo extends PaymentModule
             $payment_options = new PaymentOption();
             $action_text = $this->l('Pay with PagoEfectivo');
             $payments_options->setModuleName($this->name)
-                ->setCallToActionText($action_text);
-                ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'0'), true));
-            $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
-            if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                $action_text .= ' | '.$this->l('It\'s easy, simple and secure');
-            }
+                ->setCallToActionText($action_text)
+                ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ''), true)
+                ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
+
             $this->context->smarty->assign(array(
                 'path' => $this->_path,
             ));
-            $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'0'), true));
 
             $payments_options = [
                 $payment_options,
