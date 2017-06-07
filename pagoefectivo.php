@@ -72,16 +72,14 @@ class Pagoefectivo extends PaymentModule
     public function install()
     {
         // Validate CURL extension
-        if (extension_loaded('curl') == false)
-        {
+        if (extension_loaded('curl') == false) {
             $this->_errors[] = $this->l('You have to enable the cURL extension on your server to install this module');
             return false;
         }
 
         // Validate limited countries
         $iso_code = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
-        if (in_array($iso_code, $this->limited_countries) == false)
-        {
+        if (in_array($iso_code, $this->limited_countries) == false) {
             $this->_errors[] = $this->l('This module is not available in your country');
             return false;
         }
@@ -416,31 +414,26 @@ class Pagoefectivo extends PaymentModule
 
     public function hookPaymentOptions($params)
     {
-        $not_refunded = 0;
-        foreach ($params['cart']->getProducts() as $key => $product) {
-            if ($product['is_virtual']) {
-                $not_refunded = 1;
-                break;
-            }
+        if (!$this->active) {
+            return;
         }
-
         $payments_options = '';
 
         if (Configuration::get('PAYPAL_EXPERIENCE_PROFILE') != '') {
             $payment_options = new PaymentOption();
-            $action_text = $this->l('Pay with Paypal');
-            $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/paypal_sm.png'));
+            $action_text = $this->l('Pay with PagoEfectivo');
+            $payments_options->setModuleName($this->name)
+                ->setCallToActionText($action_text);
+                ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'0'), true));
+            $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
             if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
                 $action_text .= ' | '.$this->l('It\'s easy, simple and secure');
             }
             $this->context->smarty->assign(array(
                 'path' => $this->_path,
             ));
-            $payment_options->setCallToActionText($action_text);
             $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'0'), true));
-            if (!$not_refunded) {
-                $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
-            }
+
             $payments_options = [
                 $payment_options,
             ];
