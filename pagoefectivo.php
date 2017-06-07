@@ -80,10 +80,19 @@ class Pagoefectivo extends PaymentModule
 
         // Validate limited countries
         $iso_code = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
-
         if (in_array($iso_code, $this->limited_countries) == false)
         {
             $this->_errors[] = $this->l('This module is not available in your country');
+            return false;
+        }
+
+        // Install default
+        if (!parent::install()) {
+            return false;
+        }
+
+        // Registration hook
+        if (!$this->registrationHook()) {
             return false;
         }
 
@@ -92,23 +101,42 @@ class Pagoefectivo extends PaymentModule
             return false;
         }
 
-        Configuration::updateValue('PAGOEFECTIVO_LIVE_MODE', false);
+        //Configuration::updateValue('PAGOEFECTIVO_LIVE_MODE', false);
 
-        return parent::install() &&
-            $this->registerHook('header') &&
-            $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('payment') &&
-            $this->registerHook('paymentReturn') &&
-            $this->registerHook('actionPaymentConfirmation') &&
-            $this->registerHook('displayPayment') &&
-            $this->registerHook('displayPaymentReturn');
+    }
+
+    /**
+     * [registrationHook description]
+     * @return [type] [description]
+     */
+    private function registrationHook()
+    {
+        if (!$this->registerHook('paymentOptions')
+            || !$this->registerHook('paymentReturn')
+            || !$this->registerHook('displayOrderConfirmation')
+            || !$this->registerHook('displayAdminOrder')
+            || !$this->registerHook('actionOrderStatusPostUpdate')
+            || !$this->registerHook('actionValidateOrder')
+            || !$this->registerHook('actionOrderStatusUpdate')
+        ) {
+            return false;
+        }
+        return true;
     }
 
     public function uninstall()
     {
-        Configuration::deleteByName('PAGOEFECTIVO_LIVE_MODE');
+        //Configuration::deleteByName('PAGOEFECTIVO_LIVE_MODE');
 
-        return parent::uninstall();
+        // Uninstall default
+        if (!parent::uninstall()
+            || !Configuration::deleteByName('PAGOEFECTIVO_OS_PENDING')
+            || !Configuration::deleteByName('PAGOEFECTIVO_OS_EXPIRED')
+            || !Configuration::deleteByName('PAGOEFECTIVO_OS_REJECTED')) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -216,7 +244,7 @@ class Pagoefectivo extends PaymentModule
     protected function getConfigFormValues()
     {
         return array(
-            'PAGOEFECTIVO_LIVE_MODE' => Configuration::get('PAGOEFECTIVO_LIVE_MODE', true),
+            //'PAGOEFECTIVO_LIVE_MODE' => Configuration::get('PAGOEFECTIVO_LIVE_MODE', true),
             'PAGOEFECTIVO_ACCOUNT_EMAIL' => Configuration::get('PAGOEFECTIVO_ACCOUNT_EMAIL', 'contact@prestashop.com'),
             'PAGOEFECTIVO_ACCOUNT_PASSWORD' => Configuration::get('PAGOEFECTIVO_ACCOUNT_PASSWORD', null),
         );
