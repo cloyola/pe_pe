@@ -282,7 +282,7 @@ class Pagoefectivo extends PaymentModule
             $order_state->logable = false;
             $order_state->invoice = false;
             if ($order_state->add()){
-                $source = _PS_MODULE_DIR_.'pagoefectivo/img/logo.jpg';
+                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
                 copy($source, $destination);
             }
@@ -306,7 +306,7 @@ class Pagoefectivo extends PaymentModule
             $order_state->logable = false;
             $order_state->invoice = false;
             if ($order_state->add()){
-                $source = _PS_MODULE_DIR_.'pagoefectivo/img/logo.jpg';
+                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
                 copy($source, $destination);
             }
@@ -330,7 +330,7 @@ class Pagoefectivo extends PaymentModule
             $order_state->logable = false;
             $order_state->invoice = false;
             if ($order_state->add()){
-                $source = _PS_MODULE_DIR_.'pagoefectivo/img/logo.jpg';
+                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
                 copy($source, $destination);
             }
@@ -341,7 +341,7 @@ class Pagoefectivo extends PaymentModule
     ////////////////HOOKS//////////////////
     /**
     * Add the CSS & JavaScript files you want to be loaded in the BO.
-    */
+
     public function hookBackOfficeHeader()
     {
         if (Tools::getValue('module_name') == $this->name) {
@@ -352,7 +352,7 @@ class Pagoefectivo extends PaymentModule
 
     /**
      * Add the CSS & JavaScript files you want to be added on the FO.
-     */
+
     public function hookHeader()
     {
         $this->context->controller->addJS($this->_path.'/views/js/front.js');
@@ -412,5 +412,52 @@ class Pagoefectivo extends PaymentModule
     public function hookDisplayPaymentReturn()
     {
         /* Place your code here. */
+    }
+
+    public function hookPaymentOptions($params)
+    {
+        $not_refunded = 0;
+        foreach ($params['cart']->getProducts() as $key => $product) {
+            if ($product['is_virtual']) {
+                $not_refunded = 1;
+                break;
+            }
+        }
+
+        $payments_options = '';
+
+        if (Configuration::get('PAYPAL_EXPERIENCE_PROFILE') != '') {
+            $payment_options = new PaymentOption();
+            $action_text = $this->l('Pay with Paypal');
+            $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/paypal_sm.png'));
+            if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
+                $action_text .= ' | '.$this->l('It\'s easy, simple and secure');
+            }
+            $this->context->smarty->assign(array(
+                'path' => $this->_path,
+            ));
+            $payment_options->setCallToActionText($action_text);
+            $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'0'), true));
+            if (!$not_refunded) {
+                $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
+            }
+            $payments_options = [
+                $payment_options,
+            ];
+        }
+
+
+
+        if (Configuration::get('PAYPAL_API_CARD') && Configuration::get('PAYPAL_EXPERIENCE_PROFILE_CARD') !=  '') {
+            $payment_options = new PaymentOption();
+            $action_text = $this->l('Pay with debit or credit card');
+            $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/logo_card.png'));
+            $payment_options->setCallToActionText($action_text);
+            $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'1'), true));
+            $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
+            $payments_options[] = $payment_options;
+        }
+
+        return $payments_options;
     }
 }
