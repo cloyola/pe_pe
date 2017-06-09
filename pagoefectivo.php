@@ -402,15 +402,6 @@ class Pagoefectivo extends PaymentModule
         /* Place your code here. */
     }
 
-    public function hookDisplayPayment()
-    {
-        /* Place your code here. */
-    }
-
-    public function hookDisplayPaymentReturn()
-    {
-        /* Place your code here. */
-    }
 
     public function hookPaymentOptions($params)
     {
@@ -419,7 +410,7 @@ class Pagoefectivo extends PaymentModule
         }
         $payments_options = '';
 
-        if (Configuration::get('PAYPAL_EXPERIENCE_PROFILE') != '') {
+        //if (Configuration::get('PAYPAL_EXPERIENCE_PROFILE') != '') {
             $payment_options = new PaymentOption();
             $action_text = $this->l('Pay with PagoEfectivo');
             $payments_options->setModuleName($this->name)
@@ -434,7 +425,7 @@ class Pagoefectivo extends PaymentModule
             $payments_options = [
                 $payment_options,
             ];
-        }
+        //}
 
 
 
