@@ -122,6 +122,82 @@ class Pagoefectivo extends PaymentModule
         return true;
     }
 
+    public function installOrderState()
+    {
+        if (!Configuration::get('PAGOEFECTIVO_OS_PENDING')
+            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_PENDING')))){
+            $order_state = new OrderState();
+            $order_state->name = array();
+            foreach (Language::getLanguages() as $language){
+                if (Tools::strtolower($language['iso_code']) == 'es') {
+                    $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo pendiente';
+                } else {
+                    $order_state->name[$language['id_lang']] = 'Pending PagoEfectivo payment';
+                }
+            }
+            $order_state->send_email = false;
+            $order_state->color = '#FFD942';
+            $order_state->hidden = false;
+            $order_state->delivery = false;
+            $order_state->logable = false;
+            $order_state->invoice = false;
+            if ($order_state->add()){
+                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
+                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
+                copy($source, $destination);
+            }
+            Configuration::updateValue('PAGOEFECTIVO_OS_PENDING', (int)$order_state->id);
+        }
+
+        if (!Configuration::get('PAGOEFECTIVO_OS_EXPIRED')|| !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_EXPIRED')))){
+            $order_state = new OrderState();
+            $order_state->name = array();
+            foreach (Language::getLanguages() as $language){
+                if (Tools::strtolower($language['iso_code']) == 'es') {
+                    $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo expirado';
+                } else {
+                    $order_state->name[$language['id_lang']] = 'Expired PagoEfectivo payment';
+                }
+            }
+            $order_state->send_email = false;
+            $order_state->color = '#ec2e15';
+            $order_state->hidden = false;
+            $order_state->delivery = false;
+            $order_state->logable = false;
+            $order_state->invoice = false;
+            if ($order_state->add()){
+                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
+                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
+                copy($source, $destination);
+            }
+            Configuration::updateValue('PAGOEFECTIVO_OS_EXPIRED', (int)$order_state->id);
+        }
+
+        if (!Configuration::get('PAGOEFECTIVO_OS_REJECTED')|| !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_REJECTED')))){
+            $order_state = new OrderState();
+            $order_state->name = array();
+            foreach (Language::getLanguages() as $language){
+                if (Tools::strtolower($language['iso_code']) == 'es') {
+                    $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo extornado';
+                } else {
+                    $order_state->name[$language['id_lang']] = 'Extorned PagoEfectivo payment';
+                }
+            }
+            $order_state->send_email = false;
+            $order_state->color = '#FFD942';
+            $order_state->hidden = false;
+            $order_state->delivery = false;
+            $order_state->logable = false;
+            $order_state->invoice = false;
+            if ($order_state->add()){
+                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
+                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
+                copy($source, $destination);
+            }
+            Configuration::updateValue('PAGOEFECTIVO_OS_REJECTED', (int)$order_state->id);
+        }
+    }
+
     public function uninstall()
     {
         Configuration::deleteByName('PAGOEFECTIVO_LIVE_MODE');
@@ -154,6 +230,30 @@ class Pagoefectivo extends PaymentModule
         $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
 
         return $output.$this->renderForm();
+    }
+
+    /**
+     * Save form data.
+     */
+    protected function postProcess()
+    {
+        $form_values = $this->getConfigFormValues();
+
+        foreach (array_keys($form_values) as $key) {
+            Configuration::updateValue($key, Tools::getValue($key));
+        }
+    }
+
+    /**
+     * Set values for the inputs.
+     */
+    protected function getConfigFormValues()
+    {
+        return array(
+            'PAGOEFECTIVO_LIVE_MODE' => Configuration::get('PAGOEFECTIVO_LIVE_MODE', true),
+            'PAGOEFECTIVO_ACCOUNT_EMAIL' => Configuration::get('PAGOEFECTIVO_ACCOUNT_EMAIL', 'contact@prestashop.com'),
+            'PAGOEFECTIVO_ACCOUNT_PASSWORD' => Configuration::get('PAGOEFECTIVO_ACCOUNT_PASSWORD', null),
+        );
     }
 
     /**
@@ -236,107 +336,8 @@ class Pagoefectivo extends PaymentModule
         );
     }
 
-    /**
-     * Set values for the inputs.
-     */
-    protected function getConfigFormValues()
-    {
-        return array(
-            'PAGOEFECTIVO_LIVE_MODE' => Configuration::get('PAGOEFECTIVO_LIVE_MODE', true),
-            'PAGOEFECTIVO_ACCOUNT_EMAIL' => Configuration::get('PAGOEFECTIVO_ACCOUNT_EMAIL', 'contact@prestashop.com'),
-            'PAGOEFECTIVO_ACCOUNT_PASSWORD' => Configuration::get('PAGOEFECTIVO_ACCOUNT_PASSWORD', null),
-        );
-    }
-
-    /**
-     * Save form data.
-     */
-    protected function postProcess()
-    {
-        $form_values = $this->getConfigFormValues();
-
-        foreach (array_keys($form_values) as $key) {
-            Configuration::updateValue($key, Tools::getValue($key));
-        }
-    }
-
-    public function installOrderState()
-    {   
-        if (!Configuration::get('PAGOEFECTIVO_OS_PENDING')
-            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_PENDING')))){
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language){
-                if (Tools::strtolower($language['iso_code']) == 'es') {
-                    $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo pendiente';
-                } else {
-                    $order_state->name[$language['id_lang']] = 'Pending PagoEfectivo payment';
-                }
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#FFD942';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            if ($order_state->add()){
-                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
-                copy($source, $destination);
-            }
-            Configuration::updateValue('PAGOEFECTIVO_OS_PENDING', (int)$order_state->id);
-        }
-
-        if (!Configuration::get('PAGOEFECTIVO_OS_EXPIRED')|| !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_EXPIRED')))){
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language){
-                if (Tools::strtolower($language['iso_code']) == 'es') {
-                    $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo expirado';
-                } else {
-                    $order_state->name[$language['id_lang']] = 'Expired PagoEfectivo payment';
-                }
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#ec2e15';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            if ($order_state->add()){
-                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
-                copy($source, $destination);
-            }
-            Configuration::updateValue('PAGOEFECTIVO_OS_EXPIRED', (int)$order_state->id);
-        }
-
-        if (!Configuration::get('PAGOEFECTIVO_OS_REJECTED')|| !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_REJECTED')))){
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language){
-                if (Tools::strtolower($language['iso_code']) == 'es') {
-                    $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo extornado';
-                } else {
-                    $order_state->name[$language['id_lang']] = 'Extorned PagoEfectivo payment';
-                }
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#FFD942';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            if ($order_state->add()){
-                $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
-                copy($source, $destination);
-            }
-            Configuration::updateValue('PAGOEFECTIVO_OS_REJECTED', (int)$order_state->id);
-        }
-    }
-
     ////////////////HOOKS//////////////////
+
     /**
     * Add the CSS & JavaScript files you want to be loaded in the BO.
 
@@ -410,35 +411,18 @@ class Pagoefectivo extends PaymentModule
         }
         $payments_options = '';
 
-        //if (Configuration::get('PAYPAL_EXPERIENCE_PROFILE') != '') {
-            $payment_options = new PaymentOption();
-            $action_text = $this->l('Pay with PagoEfectivo');
-            $payments_options->setModuleName($this->name)
-                ->setCallToActionText($action_text)
-                ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ''), true)
-                ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
-
-            $this->context->smarty->assign(array(
-                'path' => $this->_path,
-            ));
-
-            $payments_options = [
-                $payment_options,
-            ];
-        //}
-
-
-
-        if (Configuration::get('PAYPAL_API_CARD') && Configuration::get('PAYPAL_EXPERIENCE_PROFILE_CARD') !=  '') {
-            $payment_options = new PaymentOption();
-            $action_text = $this->l('Pay with debit or credit card');
-            $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/logo_card.png'));
-            $payment_options->setCallToActionText($action_text);
-            $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'1'), true));
-            $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
-            $payments_options[] = $payment_options;
-        }
-
+        $payment_options = new PaymentOption();
+        $action_text = $this->l('Pay with PagoEfectivo');
+        $payments_options->setModuleName($this->name)
+            ->setCallToActionText($action_text)
+            ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ''), true)
+            ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
+        $this->context->smarty->assign(array(
+            'path' => $this->_path,
+        ));
+        $payments_options = [
+            $payment_options,
+        ];
         return $payments_options;
     }
 }
