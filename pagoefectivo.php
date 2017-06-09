@@ -98,9 +98,8 @@ class Pagoefectivo extends PaymentModule
         if (!$this->installOrderState()) {
             return false;
         }
-
         Configuration::updateValue('PAGOEFECTIVO_LIVE_MODE', false);
-
+        return true;
     }
 
     /**
@@ -125,10 +124,10 @@ class Pagoefectivo extends PaymentModule
     public function installOrderState()
     {
         if (!Configuration::get('PAGOEFECTIVO_OS_PENDING')
-            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_PENDING')))){
+            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_PENDING')))) {
             $order_state = new OrderState();
             $order_state->name = array();
-            foreach (Language::getLanguages() as $language){
+            foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'es') {
                     $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo pendiente';
                 } else {
@@ -141,7 +140,7 @@ class Pagoefectivo extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
-            if ($order_state->add()){
+            if ($order_state->add()) {
                 $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
                 copy($source, $destination);
@@ -149,10 +148,11 @@ class Pagoefectivo extends PaymentModule
             Configuration::updateValue('PAGOEFECTIVO_OS_PENDING', (int)$order_state->id);
         }
 
-        if (!Configuration::get('PAGOEFECTIVO_OS_EXPIRED')|| !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_EXPIRED')))){
+        if (!Configuration::get('PAGOEFECTIVO_OS_EXPIRED')
+            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_EXPIRED')))) {
             $order_state = new OrderState();
             $order_state->name = array();
-            foreach (Language::getLanguages() as $language){
+            foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'es') {
                     $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo expirado';
                 } else {
@@ -165,7 +165,7 @@ class Pagoefectivo extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
-            if ($order_state->add()){
+            if ($order_state->add()) {
                 $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
                 copy($source, $destination);
@@ -173,10 +173,11 @@ class Pagoefectivo extends PaymentModule
             Configuration::updateValue('PAGOEFECTIVO_OS_EXPIRED', (int)$order_state->id);
         }
 
-        if (!Configuration::get('PAGOEFECTIVO_OS_REJECTED')|| !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_REJECTED')))){
+        if (!Configuration::get('PAGOEFECTIVO_OS_REJECTED')
+            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAGOEFECTIVO_OS_REJECTED')))) {
             $order_state = new OrderState();
             $order_state->name = array();
-            foreach (Language::getLanguages() as $language){
+            foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($language['iso_code']) == 'es') {
                     $order_state->name[$language['id_lang']] = 'Pago PagoEfectivo extornado';
                 } else {
@@ -189,7 +190,7 @@ class Pagoefectivo extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
-            if ($order_state->add()){
+            if ($order_state->add()) {
                 $source = _PS_MODULE_DIR_.'pagoefectivo/views/img/logo.jpg';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
                 copy($source, $destination);
@@ -280,7 +281,6 @@ class Pagoefectivo extends PaymentModule
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id,
         );
-
         return $helper->generateForm(array($this->getConfigForm()));
     }
 
@@ -341,22 +341,6 @@ class Pagoefectivo extends PaymentModule
     /**
     * Add the CSS & JavaScript files you want to be loaded in the BO.
 
-    public function hookBackOfficeHeader()
-    {
-        if (Tools::getValue('module_name') == $this->name) {
-            $this->context->controller->addJS($this->_path.'views/js/back.js');
-            $this->context->controller->addCSS($this->_path.'views/css/back.css');
-        }
-    }
-
-    /**
-     * Add the CSS & JavaScript files you want to be added on the FO.
-
-    public function hookHeader()
-    {
-        $this->context->controller->addJS($this->_path.'/views/js/front.js');
-        $this->context->controller->addCSS($this->_path.'/views/css/front.css');
-    }
 
     /**
      * This method is used to render the payment button,
