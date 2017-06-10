@@ -50,7 +50,7 @@ class Pagoefectivo extends PaymentModule
         parent::__construct();
 
         $this->displayName = $this->l('PagoEfectivo');
-        $this->description = $this->l('Secure internet transactions in Perú.');
+        $this->description = $this->l('Secure internet transactions in Peru.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall the PagoEfectivo module?');
 
         $this->limited_countries = array('PE');
@@ -98,7 +98,12 @@ class Pagoefectivo extends PaymentModule
         if (!$this->installOrderState()) {
             return false;
         }
+
+        //Update configuration values
         Configuration::updateValue('PAGOEFECTIVO_LIVE_MODE', false);
+        Configuration::updateValue('PAGOEFECTIVO_ACCOUNT_EMAIL', '');
+        Configuration::updateValue('PAGOEFECTIVO_ACCOUNT_PASSWORD','');
+
         return true;
     }
 
@@ -202,6 +207,8 @@ class Pagoefectivo extends PaymentModule
     public function uninstall()
     {
         Configuration::deleteByName('PAGOEFECTIVO_LIVE_MODE');
+        Configuration::deleteByName('PAGOEFECTIVO_ACCOUNT_EMAIL');
+        Configuration::deleteByName('PAGOEFECTIVO_ACCOUNT_PASSWORD');
 
         // Uninstall default
         if (!parent::uninstall()
@@ -210,7 +217,6 @@ class Pagoefectivo extends PaymentModule
             || !Configuration::deleteByName('PAGOEFECTIVO_OS_REJECTED')) {
             return false;
         }
-
         return true;
     }
 
@@ -388,19 +394,19 @@ class Pagoefectivo extends PaymentModule
         if (!$this->active) {
             return;
         }
-        $payments_options = '';
+        //$payments_options = '';
 
-        $payment_options = new PaymentOption();
-        $action_text = $this->l('Pay with PagoEfectivo');
-        $payments_options->setModuleName($this->name)
-            ->setCallToActionText($action_text)
+        $newOption = new PaymentOption();
+        //$action_text = $this->l('Pay with PagoEfectivo');
+        $newOption->setModuleName($this->name)
+            ->setCallToActionText($this->trans('Pay with PagoEfectivo', array(), 'Modules.PagoEfectivo.Shop'))
             ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ''), true)
             ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
         $this->context->smarty->assign(array(
             'path' => $this->_path,
         ));
         $payments_options = [
-            $payment_options,
+            $newOption,
         ];
         return $payments_options;
     }
