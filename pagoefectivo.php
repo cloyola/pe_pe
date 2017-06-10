@@ -110,11 +110,11 @@ class Pagoefectivo extends PaymentModule
     {
         if (!$this->registerHook('paymentOptions')
             || !$this->registerHook('paymentReturn')
-            || !$this->registerHook('displayOrderConfirmation')
-            || !$this->registerHook('displayAdminOrder')
-            || !$this->registerHook('actionOrderStatusPostUpdate')
-            || !$this->registerHook('actionValidateOrder')
-            || !$this->registerHook('actionOrderStatusUpdate')
+//            || !$this->registerHook('displayOrderConfirmation')
+//            || !$this->registerHook('displayAdminOrder')
+//            || !$this->registerHook('actionOrderStatusPostUpdate')
+//            || !$this->registerHook('actionValidateOrder')
+//            || !$this->registerHook('actionOrderStatusUpdate')
         ) {
             return false;
         }
@@ -382,11 +382,6 @@ class Pagoefectivo extends PaymentModule
         return $this->display(__FILE__, 'views/templates/hook/confirmation.tpl');
     }
 
-    public function hookActionPaymentConfirmation()
-    {
-        /* Place your code here. */
-    }
-
 
     public function hookPaymentOptions($params)
     {
@@ -409,4 +404,10 @@ class Pagoefectivo extends PaymentModule
         ];
         return $payments_options;
     }
+
+    public function hookActionPaymentConfirmation()
+    {
+        /* Place your code here. */
+    }
+
 }
