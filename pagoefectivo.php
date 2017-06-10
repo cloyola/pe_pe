@@ -388,7 +388,6 @@ class Pagoefectivo extends PaymentModule
         return $this->display(__FILE__, 'views/templates/hook/confirmation.tpl');
     }
 
-
     public function hookPaymentOptions($params)
     {
         if (!$this->active) {
