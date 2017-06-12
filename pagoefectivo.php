@@ -401,7 +401,7 @@ class Pagoefectivo extends PaymentModule
         //$action_text = $this->l('Pay with PagoEfectivo');
         $newOption->setModuleName($this->name)
             ->setCallToActionText($this->trans('Pay with PagoEfectivo', array(), 'Modules.PagoEfectivo.Shop'))
-            ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', ''), true)
+            ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array(), true))
             ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
         $this->context->smarty->assign(array(
             'path' => $this->_path,
