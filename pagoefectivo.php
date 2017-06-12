@@ -354,7 +354,7 @@ class Pagoefectivo extends PaymentModule
      * This method is used to render the payment button,
      * Take care if the button should be displayed or not.
      */
-    public function hookPayment($params)
+    /*public function hookPayment($params)
     {
         $currency_id = $params['cart']->id_currency;
         $currency = new Currency((int)$currency_id);
@@ -365,7 +365,7 @@ class Pagoefectivo extends PaymentModule
         $this->smarty->assign('module_dir', $this->_path);
 
         return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
-    }
+    }*/
 
     /**
      * This hook is used to display the order confirmation page.
@@ -403,9 +403,9 @@ class Pagoefectivo extends PaymentModule
             ->setCallToActionText($this->trans('Pay with PagoEfectivo', array(), 'Modules.PagoEfectivo.Shop'))
             ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array(), true))
             ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
-        $this->context->smarty->assign(array(
+        /*$this->context->smarty->assign(array(
             'path' => $this->_path,
-        ));
+        ));*/
         $payments_options = [
             $newOption,
         ];
