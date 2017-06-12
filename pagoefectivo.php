@@ -52,7 +52,7 @@ class Pagoefectivo extends PaymentModule
         parent::__construct();
 
         $this->displayName = $this->l('PagoEfectivo');
-        $this->description = $this->l('Secure internet transactions in Peru.');
+        $this->description = $this->l('Secure internet transactions in Peru');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall the PagoEfectivo module?');
 
         $this->limited_countries = array('PE');
