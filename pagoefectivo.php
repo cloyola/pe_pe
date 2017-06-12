@@ -51,9 +51,12 @@ class Pagoefectivo extends PaymentModule
 
         parent::__construct();
 
-        $this->displayName = $this->l('PagoEfectivo');
-        $this->description = $this->l('Secure internet transactions in Peru.');
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall the PagoEfectivo module?');
+        //$this->displayName = $this->l('PagoEfectivo');
+        $this->displayName = $this->trans('PagoEfectivo', array(), 'Modules.PagoEfectivo.Admin');
+        //$this->description = $this->l('Secure internet transactions in Peru.');
+        $this->description = $this->trans('Secure internet transactions in Peru.', array(), 'Modules.PagoEfectivo.Admin');
+        //$this->confirmUninstall = $this->l('Are you sure you want to uninstall the PagoEfectivo module?');
+        $this->confirmUninstall = $this->trans('Are you sure you want to uninstall the PagoEfectivo module?', array(), 'Modules.PagoEfectivo.Admin');
 
         $this->limited_countries = array('PE');
         $this->limited_currencies = array('PEN','USD');
@@ -370,6 +373,33 @@ class Pagoefectivo extends PaymentModule
     /**
      * This hook is used to display the order confirmation page.
      */
+
+    public function hookPaymentOptions($params)
+    {
+        if (!$this->active) {
+            return;
+        }
+
+        if (!$this->checkCurrency($params['cart'])) {
+            return;
+        }
+        //$payments_options = '';
+
+        $newOption = new PaymentOption();
+        //$action_text = $this->l('Pay with PagoEfectivo');
+        $newOption->setModuleName($this->name)
+            ->setCallToActionText($this->trans('Pay with PagoEfectivo', array(), 'Modules.PagoEfectivo.Admin'))
+            ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array(), true))
+            ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
+        /*$this->context->smarty->assign(array(
+            'path' => $this->_path,
+        ));*/
+        $payments_options = [
+            $newOption,
+        ];
+        return $payments_options;
+    }
+
     public function hookPaymentReturn($params)
     {
         if ($this->active == false)
@@ -388,28 +418,6 @@ class Pagoefectivo extends PaymentModule
         ));
 
         return $this->display(__FILE__, 'views/templates/hook/confirmation.tpl');
-    }
-
-    public function hookPaymentOptions($params)
-    {
-        if (!$this->active) {
-            return;
-        }
-        //$payments_options = '';
-
-        $newOption = new PaymentOption();
-        //$action_text = $this->l('Pay with PagoEfectivo');
-        $newOption->setModuleName($this->name)
-            ->setCallToActionText($this->trans('Pay with PagoEfectivo', array(), 'Modules.PagoEfectivo.Shop'))
-            ->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array(), true))
-            ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/pagoefectivo.png'));
-        /*$this->context->smarty->assign(array(
-            'path' => $this->_path,
-        ));*/
-        $payments_options = [
-            $newOption,
-        ];
-        return $payments_options;
     }
 
     public function hookActionPaymentConfirmation()
