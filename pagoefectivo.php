@@ -104,7 +104,7 @@ class Pagoefectivo extends PaymentModule
         //Update configuration values
         Configuration::updateValue('PAGOEFECTIVO_LIVE_MODE', false);
         Configuration::updateValue('PAGOEFECTIVO_ACCOUNT_EMAIL', '');
-        Configuration::updateValue('PAGOEFECTIVO_ACCOUNT_PASSWORD','');
+        Configuration::updateValue('PAGOEFECTIVO_ACCOUNT_PASSWORD', '');
 
         return true;
     }
@@ -416,5 +416,4 @@ class Pagoefectivo extends PaymentModule
     {
         /* Place your code here. */
     }
-
 }
