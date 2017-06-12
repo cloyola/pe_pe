@@ -3,7 +3,7 @@
 	<name>pagoefectivo</name>
 	<displayName><![CDATA[PagoEfectivo]]></displayName>
 	<version><![CDATA[1.4.0]]></version>
-	<description><![CDATA[Transacciones seguras en internet en el Peru]]></description>
+	<description><![CDATA[Secure internet transactions in Peru.]]></description>
 	<author><![CDATA[Carlos Loyola]]></author>
 	<is_configurable>1</is_configurable>
 	<need_instance>1</need_instance>
