@@ -30,8 +30,8 @@
 			{l s='My Payment Module and PrestaShop have partnered to provide the easiest way for you to accurately calculate and file sales tax.' mod='pagoefectivo'}
 		</div>
 		<div class="col-xs-12 col-md-3 text-center">
-			<a href="#" onclick="return false;" class="btn btn-primary" id="create-account-btn">{l s='Register your store' mod='pagoefectivo'}</a><br />
-			{l s='Already have one?' mod='pagoefectivo'}<a href="#" onclick="return false;"> {l s='Log in' mod='pagoefectivo'}</a>
+			<a href="http://centraldeayuda.pagoefectivo.pe/hc/es/requests/new" onclick="return false;" class="btn btn-primary" id="create-account-btn">{l s='Register your store' mod='pagoefectivo'}</a><br />
+			{l s='Already have one?' mod='pagoefectivo'}<a href="https://wallet.pagoefectivo.pe/login" onclick="return false;"> {l s='Log in' mod='pagoefectivo'}</a>
 		</div>
 	</div>
 
