@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+require_once(dirname(__FILE__) . '/lib_pagoefectivo/PagoEfectivo.php');
+require_once(dirname(__FILE__) . '/lib_pagoefectivo/be/be_solicitud.php');
+
 class PagoefectivoValidationModuleFrontController extends ModuleFrontController
 {
     /**
@@ -39,13 +42,29 @@ class PagoefectivoValidationModuleFrontController extends ModuleFrontController
             die;
         }
 
-        /**
-         * Since it is an example, we choose sample data,
-         * You'll have to get the correct values :)
-         */
-        $cart_id = 1;
-        $customer_id = 1;
-        $amount = 100.00;
+        // Check if cart exists and all fields are set
+        $cart = Context::getContext()->cart;
+        if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 ||
+            $cart->id_address_invoice == 0 || !$this->module->active)
+            Tools::redirect('index.php?controller=order&step=1');
+
+        // Check if module is enabled
+        $authorized = false;
+        foreach (Module::getPaymentModules() as $module)
+            if ($module['name'] == $this->module->name)
+                $authorized = true;
+        if (!$authorized)
+            die('This payment method is not available.');
+
+        // Check if customer exists
+        $customer = new Customer((int)$cart->id_customer);
+        if (!Validate::isLoadedObject($customer))
+            Tools::redirect('index.php?controller=order&step=1');
+
+        $currency = new Currency((int)$cart->id_currency);
+        $currencyCode = $currency->iso_code;
+        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+        $extra_vars = array('transaction_id' => Tools::getValue('transaction_id'));
 
         /**
          * Restore the context from the $cart_id & the $customer_id to process the validation properly.
@@ -77,9 +96,27 @@ class PagoefectivoValidationModuleFrontController extends ModuleFrontController
 
     protected function isValidOrder()
     {
-        /**
-         * Add your checks right there
-         */
+
+        $this->module->validateOrder($cart->id,Configuration::get('PAGOEFECTIVO_OS_PENDING'),$total,$this->module->displayName,NULL,$extra_vars,(int)$currency->id,false,$customer->secure_key);
+
         return true;
+    }
+
+    function especiales($s)
+    {
+        $s = preg_replace("/á|à|â|ã|ª/","a",$s);
+        $s = preg_replace("/Á|À|Â|Ã/","A",$s);
+        $s = preg_replace("/é|è|ê/","e",$s);
+        $s = preg_replace("/É|È|Ê/","E",$s);
+        $s = preg_replace("/í|ì|î/","i",$s);
+        $s = preg_replace("/Í|Ì|Î/","I",$s);
+        $s = preg_replace("/ó|ò|ô|õ|º/","o",$s);
+        $s = preg_replace("/Ó|Ò|Ô|Õ/","O",$s);
+        $s = preg_replace("/ú|ù|û/","u",$s);
+        $s = preg_replace("/Ú|Ù|Û/","U",$s);
+        $s = str_replace("ñ","n",$s);
+        $s = str_replace("Ñ","N",$s);
+        $s = trim(preg_replace('/[^a-zA-Z0-9., ]/','',$s));
+        return $s;
     }
 }

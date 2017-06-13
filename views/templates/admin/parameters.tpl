@@ -43,22 +43,22 @@
 				<h5>{l s='Benefits of using my payment module' mod='pagoefectivo'}</h5>
 				<ul class="ul-spaced">
 					<li>
-						<strong>{l s='It is fast and easy' mod='pagoefectivo'}:</strong>
-						{l s='It is pre-integrated with PrestaShop, so you can configure it with a few clicks.' mod='pagoefectivo'}
+						<strong>{l s='Accessible' mod='pagoefectivo'}:</strong>
+						{l s='Offer more payment alternatives and channels to your potential customers.' mod='pagoefectivo'}
 					</li>
 					
 					<li>
-						<strong>{l s='It is global' mod='pagoefectivo'}:</strong>
-						{l s='Accept payments in XX currencies from XXX markets around the world.' mod='pagoefectivo'}
+						<strong>{l s='Safier' mod='pagoefectivo'}:</strong>
+						{l s='A single CIP code for each transaction and we have SSL security certificate.' mod='pagoefectivo'}
 					</li>
 					
 					<li>
-						<strong>{l s='It is trusted' mod='pagoefectivo'}:</strong>
-						{l s='Industry-leading fraud an buyer protections keep you and your customers safe.' mod='pagoefectivo'}
+						<strong>{l s='Flexible' mod='pagoefectivo'}:</strong>
+						{l s='Set the expiration time of the CIP according to the needs of your business.' mod='pagoefectivo'}
 					</li>
 					
 					<li>
-						<strong>{l s='It is cost-effective' mod='pagoefectivo'}:</strong>
+						<strong>{l s='Multi platform' mod='pagoefectivo'}:</strong>
 						{l s='There are no setup fees or long-term contracts. You only pay a low transaction fee.' mod='pagoefectivo'}
 					</li>
 				</ul>
@@ -67,19 +67,19 @@
 			<div class="col-md-2">
 				<h5>{l s='Pricing' mod='pagoefectivo'}</h5>
 				<dl class="list-unstyled">
-					<dt>{l s='Payment Standard' mod='pagoefectivo'}</dt>
-					<dd>{l s='No monthly fee' mod='pagoefectivo'}</dd>
-					<dt>{l s='Payment Express' mod='pagoefectivo'}</dt>
-					<dd>{l s='No monthly fee' mod='pagoefectivo'}</dd>
-					<dt>{l s='Payment Pro' mod='pagoefectivo'}</dt>
-					<dd>{l s='$5 per month' mod='pagoefectivo'}</dd>
+					<dt>{l s='Generate CIP code' mod='pagoefectivo'}</dt>
+					<dd>{l s='automatically with this module.' mod='pagoefectivo'}</dd>
+					<dt>{l s='Provide CIP code' mod='pagoefectivo'}</dt>
+					<dd>{l s='instantly to your client' mod='pagoefectivo'}</dd>
+					<dt>{l s='Client pay anywhere' mod='pagoefectivo'}</dt>
+					<dd>{l s='with the CIP code' mod='pagoefectivo'}</dd>
 				</dl>
 				<a href="#" onclick="return false;">(Detailed pricing here)</a>
 			</div>
 			
 			<div class="col-md-5">
 				<h5>{l s='How does it work?' mod='pagoefectivo'}</h5>
-				<iframe src="//player.vimeo.com/video/75405291" width="335" height="188" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+				<iframe src="https://www.youtube.com/embed/N1NJabZgUKQ" width="335" height="188" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 			</div>
 		</div>
 
