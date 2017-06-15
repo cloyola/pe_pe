@@ -25,7 +25,7 @@
 
 <div class="panel">
 	<div class="row pagoefectivo-header">
-		<img src="{$module_dir|escape:'html':'UTF-8'}views/img/template_1_logo.png" class="col-xs-6 col-md-4 text-center" id="payment-logo" />
+		<img src="{$module_dir|escape:'html':'UTF-8'}views/img/pagoefectivo.png" class="col-xs-6 col-md-4 text-center" id="payment-logo" />
 		<div class="col-xs-6 col-md-4 text-center">
 			<h4>{l s='Online payment processing' mod='pagoefectivo'}</h4>
 			<h4>{l s='Fast - Secure - Reliable' mod='pagoefectivo'}</h4>
