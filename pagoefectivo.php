@@ -380,9 +380,9 @@ class Pagoefectivo extends PaymentModule
             return;
         }
 
-        if (!$this->checkCurrency($params['cart'])) {
+        /*if (!$this->checkCurrency($params['cart'])) {
             return;
-        }
+        }*/
         //$payments_options = '';
 
         $newOption = new PaymentOption();
